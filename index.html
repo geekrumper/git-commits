@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Eine interaktive Lektion im Terminal-Stil zum Lernen von Git-Commits."
+    />
+    <title>Commit Quest — Git lernen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="site-header">
+        <a class="brand" href="#" aria-label="Commit Quest Startseite">
+          <span class="brand-mark" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </span>
+          <span>COMMIT<span>_QUEST</span></span>
+        </a>
+        <div class="header-tools">
+          <div class="lesson-status">
+            <span class="status-label">Lernfortschritt</span>
+            <div class="progress-track" aria-label="Lernfortschritt">
+              <span id="progressBar"></span>
+            </div>
+            <span id="progressText">01 / 08</span>
+          </div>
+          <button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false" title="Helles Design aktivieren">
+            <span class="theme-toggle-icon" aria-hidden="true">☼</span>
+            <span class="theme-toggle-label">Hell</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="hero">
+        <p class="eyebrow"><span></span> Interaktives Git-Terminal</p>
+        <h1>Jedes große Projekt<br />beginnt mit einem <em>Commit.</em></h1>
+        <p class="hero-copy">
+          Hilf Maya, ihre Arbeit sicher, ordentlich und teilbar zu halten. Ein Git-Befehl nach dem anderen.
+        </p>
+      </section>
+
+      <section class="learning-grid" aria-label="Git lesson">
+        <aside class="mission-panel">
+          <div class="chapter">
+            <span>Kapitel 01</span>
+            <strong>Die ersten Spuren</strong>
+          </div>
+          <ol id="stepList" class="step-list" aria-label="Lernschritte"></ol>
+          <div class="keyboard-tip">
+            <kbd>↵</kbd>
+            <span>Enter: ausführen · Strg + /: Hilfe</span>
+          </div>
+        </aside>
+
+        <div class="terminal-wrap">
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="window-controls" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="terminal-title">maya@laptop — git-quest</span>
+              <span class="terminal-badge">bash</span>
+            </div>
+
+            <div class="terminal-body">
+              <div class="terminal-history">
+                <div id="terminalOutput" class="terminal-output" aria-live="polite">
+                  <p class="system-line">Letzte Anmeldung: heute auf ttys001</p>
+                  <p><span class="prompt">maya@laptop</span><span class="separator">:</span><span class="path">~/portfolio</span><span class="symbol">$</span> <span class="muted">willkommen bei Commit Quest</span></p>
+                </div>
+                <div class="history-controls" aria-label="Terminal-Verlauf scrollen">
+                  <button id="historyUpButton" type="button" aria-label="Im Terminal-Verlauf nach oben scrollen" title="Verlauf nach oben">▲</button>
+                  <button id="historyDownButton" type="button" aria-label="Im Terminal-Verlauf nach unten scrollen" title="Verlauf nach unten">▼</button>
+                </div>
+              </div>
+
+              <article class="mission-card">
+                <div class="mission-heading">
+                  <span id="missionNumber">AUFGABE 01</span>
+                  <span class="difficulty"><i></i><i></i><i></i><i></i></span>
+                </div>
+                <h2 id="missionTitle">Erkunde den aktuellen Stand</h2>
+                <p id="missionText"></p>
+                <div class="hint">
+                  <span class="hint-icon">?</span>
+                  <span id="hintText"></span>
+                </div>
+              </article>
+
+              <form id="commandForm" class="command-line" autocomplete="off">
+                <label for="commandInput" class="command-prompt">
+                  <span class="prompt">maya@laptop</span><span class="separator">:</span><span class="path">~/portfolio</span><span class="symbol">$</span>
+                </label>
+                <input
+                  id="commandInput"
+                  type="text"
+                  spellcheck="false"
+                  aria-label="Git-Befehl eingeben"
+                  placeholder="Gib deinen Befehl ein ..."
+                  autofocus
+                />
+                <button type="submit" aria-label="Befehl ausführen">Start <span>↵</span></button>
+              </form>
+              <p id="feedback" class="feedback" role="status"></p>
+              <button id="bailOutButton" class="bail-out-button" type="button" title="Befehlshilfe öffnen (Strg + /)">
+                Ich kenne den Befehl nicht
+              </button>
+            </div>
+          </div>
+          <button id="resetButton" class="reset-button" type="button">↻ Lektion neu starten</button>
+        </div>
+      </section>
+
+      <footer>
+        <span>Für den ersten Commit und jeden danach.</span>
+        <span class="footer-prompt">git status <b>●</b></span>
+      </footer>
+    </main>
+    <dialog id="commandHelpModal" class="command-help-modal" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <span>BEFEHLSHILFE</span>
+        <button id="modalCloseButton" class="modal-close-button" type="button" aria-label="Hilfe schließen">×</button>
+      </div>
+      <div class="modal-content">
+        <p class="modal-kicker">Der gesuchte Befehl</p>
+        <code id="modalCommand"></code>
+        <h2 id="modalTitle"></h2>
+        <p id="modalExplanation"></p>
+        <button id="modalContinueButton" class="modal-continue-button" type="button">Befehl ins Terminal einfügen</button>
+      </div>
+    </dialog>
+    <script src="script.js"></script>
+  </body>
+</html>
