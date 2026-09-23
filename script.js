@@ -3,7 +3,7 @@ const lessons = [
     title: "Erkunde den aktuellen Stand",
     shortTitle: "Status prüfen",
     text: "Maya öffnet ihren Projektordner nach dem Wochenende. Bevor sie etwas speichert oder teilt, möchte sie nachsehen: Gibt es <strong>neue Dateien</strong>? Wurde etwas verändert? Und liegt vielleicht schon etwas bereit, das gespeichert werden soll? Git kann ihr diesen Überblick geben, <em>ohne selbst etwas zu verändern</em>.",
-    hint: "Tipp: Suche nach dem Git-Befehl, der dir den aktuellen Zustand deines Projekts zeigt.",
+    hint: "Tipp: Gib <code>git status</code> ein. Dieser Befehl zeigt den aktuellen Zustand deines Projekts.",
     command: "git status",
     output: "Auf Branch main\nnichts zu committen, Arbeitsverzeichnis sauber",
     explanation: "Dieser Befehl ist wie ein Blick auf einen Schreibtisch: Er zeigt, was neu ist, was verändert wurde und was bereits für das Speichern ausgewählt ist. Er verändert keine Datei und ist deshalb ein guter, sicherer erster Schritt bei fast jeder Git-Aufgabe.",
@@ -13,7 +13,7 @@ const lessons = [
     title: "Starte die Versionsverwaltung",
     shortTitle: "Git initialisieren",
     text: "Mayas Portfolio liegt bisher nur als normaler Ordner auf ihrem Laptop vor. Sie möchte ab heute nachvollziehen können, welche Stände es gab und bei Bedarf zu einem <strong>früheren Stand zurückkehren</strong>. Dafür muss sie Git einmalig mitteilen: Dieser Ordner soll ab jetzt eine eigene Projektgeschichte bekommen.",
-    hint: "Tipp: Du brauchst den Git-Startbefehl für einen Ordner, der bisher noch keine Versionsgeschichte hat.",
+    hint: "Tipp: Gib <code>git init</code> ein. Damit startest du die Versionsverwaltung im aktuellen Ordner.",
     command: "git init",
     output: "Leeres Git-Repository in ~/portfolio/.git/ initialisiert",
     explanation: "Damit beginnt Git, diesen Ordner zu verwalten. Im Hintergrund entsteht ein versteckter Bereich namens .git. Dort speichert Git später die Historie des Projekts; die sichtbaren Dateien bleiben dabei unverändert.",
@@ -23,7 +23,7 @@ const lessons = [
     title: "Prüfe die Änderungen",
     shortTitle: "Änderungen prüfen",
     text: "Jetzt liegen im Ordner eine Startseite und ein Stylesheet. Git weiß, dass sie existieren, behandelt sie aber noch nicht als Teil der Projektgeschichte. Maya möchte zuerst genau sehen, welche Dateien Git als <strong>neu</strong> erkennt. So vermeidet sie, versehentlich die falschen Dateien zu speichern.",
-    hint: "Tipp: Dies ist derselbe Überblicksbefehl wie zu Beginn. Er nennt auch Dateien, die Git noch nicht verfolgt.",
+    hint: "Tipp: Gib erneut <code>git status</code> ein. Der Befehl nennt auch Dateien, die Git noch nicht verfolgt.",
     command: "git status",
     output: "Auf Branch main\n\nNicht verfolgte Dateien:\n  index.html\n  styles.css\n\nKeine Änderungen zum Commit vorgemerkt",
     explanation: "Git nennt solche Dateien „nicht verfolgt“. Sie liegen im Ordner, gehören aber noch nicht zur Git-Historie. Der Überblicksbefehl hilft Maya zu entscheiden, welche Dateien sie im nächsten Schritt für einen gespeicherten Stand auswählen möchte.",
@@ -33,7 +33,7 @@ const lessons = [
     title: "Wähle Dateien für den Schnappschuss",
     shortTitle: "Dateien vormerken",
     text: "Maya ist mit allen sichtbaren Dateien zufrieden und möchte sie gemeinsam als nächsten Projektstand sichern. Bevor Git diesen Stand dauerhaft speichert, legt Maya zuerst eine <strong>Auswahl</strong> bereit. In diesem Fall soll wirklich alles aus dem aktuellen Ordner dazugehören; der Punkt steht im Terminal für „hier und alles darunter“.",
-    hint: "Tipp: Suche nach dem Befehl zum Vormerken. Ergänze ihn um das Zeichen, das im Terminal für den aktuellen Ordner steht.",
+    hint: "Tipp: Gib <code>git add .</code> ein. Der Punkt steht für alle Dateien im aktuellen Ordner.",
     command: "git add .",
     output: "Dateien für den Commit vorgemerkt.",
     explanation: "Git speichert Änderungen in zwei Etappen. Zuerst wählst du aus, was in den nächsten gespeicherten Stand soll. Diese Auswahl heißt Staging Area. Der Punkt sorgt dafür, dass alle Dateien im aktuellen Ordner und seinen Unterordnern ausgewählt werden.",
@@ -43,9 +43,12 @@ const lessons = [
     title: "Speichere einen sinnvollen Zwischenstand",
     shortTitle: "Commit erstellen",
     text: "Die Dateien sind nun ausgewählt, aber noch nicht dauerhaft in der Projektgeschichte gesichert. Maya möchte einen festen <strong>Meilenstein</strong> anlegen, zu dem sie später zurückkehren kann. Jeder solche Meilenstein braucht eine kurze Nachricht, damit andere verstehen, was zu diesem Zeitpunkt erreicht war. Ihre Nachricht lautet: <em>Initial portfolio</em>.",
-    hint: "Tipp: Verwende den Befehl zum Speichern eines Meilensteins. Die Option für eine Nachricht wird mit einem Bindestrich und einem einzelnen Buchstaben geschrieben; setze die Nachricht in Anführungszeichen.",
+    hint: 'Tipp: Gib <code>git commit -m "Mein erster Stand"</code> ein. Nach <code>-m</code> darf jede nicht leere Nachricht in Anführungszeichen stehen.',
     command: 'git commit -m "Initial portfolio"',
-    alternatives: ["git commit -m 'Initial portfolio'"],
+    accepts: (command) => {
+      const match = /^git commit -m\s+(['"])(.*?)\1$/i.exec(command);
+      return Boolean(match && match[2].trim());
+    },
     output: "[main a31d9c7] Initial portfolio\n 2 Dateien geändert, 84 Zeilen hinzugefügt",
     explanation: "Ein Commit ist ein dauerhafter, benannter Schnappschuss der zuvor ausgewählten Dateien. Die kurze Nachricht erklärt den Inhalt dieses Schnappschusses. Gute Nachrichten helfen auch Wochen später noch dabei, die Geschichte eines Projekts zu verstehen.",
     difficulty: 2,
@@ -54,7 +57,7 @@ const lessons = [
     title: "Sieh in die Historie zurück",
     shortTitle: "Historie ansehen",
     text: "Maya hat ihren ersten Meilenstein gespeichert und möchte kontrollieren, ob er wirklich in der Geschichte des Projekts steht. Git führt dafür ein <strong>Tagebuch</strong>: Zu jedem gespeicherten Stand gibt es eine Kennung, eine Person, einen Zeitpunkt und eine Nachricht. Maya möchte dieses Tagebuch öffnen.",
-    hint: "Tipp: Suche nach dem kurzen Git-Befehl für das Protokoll beziehungsweise die Historie.",
+    hint: "Tipp: Gib <code>git log</code> ein, um die gespeicherten Meilensteine in der Historie zu sehen.",
     command: "git log",
     output: "commit a31d9c7 (HEAD -> main)\nAutorin: Maya <maya@example.com>\nDatum:   Heute\n\n    Initial portfolio",
     explanation: "Das Git-Protokoll zeigt gespeicherte Meilensteine, normalerweise vom neuesten zum ältesten. Jeder Eintrag hat eine eindeutige Kennung, Informationen zur Person und zum Zeitpunkt sowie die Nachricht, die beim Speichern vergeben wurde.",
@@ -64,7 +67,7 @@ const lessons = [
     title: "Gib einem Branch einen Namen",
     shortTitle: "Branch erstellen",
     text: "Maya möchte einen neuen Weg für ihr Projekt ausprobieren, ohne den sicheren Hauptstand anzutasten. In Git heißt ein solcher paralleler Arbeitsweg <strong>Branch</strong>. Sie legt einen neuen Branch an und nennt ihn <em>experiment</em>. Noch arbeitet sie danach nicht automatisch auf diesem neuen Weg – sie erstellt zunächst nur das Schild dafür.",
-    hint: "Tipp: Der Befehl zum Anlegen eines parallelen Arbeitswegs besteht aus Git, dem englischen Wort für Ast und dem gewünschten Namen.",
+    hint: "Tipp: Gib <code>git branch experiment</code> ein, um den neuen Arbeitsweg anzulegen.",
     command: "git branch experiment",
     output: "Branch „experiment“ erstellt.",
     explanation: "Ein Branch ist wie ein alternativer Weg ab demselben Ausgangspunkt. So kann Maya gefahrlos etwas ausprobieren, während die Hauptversion unverändert bleibt. Nach dem Anlegen ist der neue Weg vorhanden, aber Maya steht noch auf dem bisherigen Branch main.",
@@ -74,7 +77,7 @@ const lessons = [
     title: "Wechsle auf den neuen Pfad",
     shortTitle: "Branch wechseln",
     text: "Der neue Weg <em>experiment</em> existiert, doch Maya befindet sich noch auf <strong>main</strong>, dem Hauptweg. Bevor sie dort etwas ausprobieren kann, muss sie aktiv auf experiment wechseln. Git hat dafür einen modernen Befehl, dessen englisches Verb „wechseln“ bedeutet. Danach gehören ihre nächsten gespeicherten Stände zu experiment.",
-    hint: "Tipp: Kombiniere Git mit dem englischen Verb für „wechseln“ und dem Namen experiment.",
+    hint: "Tipp: Gib <code>git switch experiment</code> ein, um auf den neuen Arbeitsweg zu wechseln.",
     command: "git switch experiment",
     alternatives: ["git checkout experiment"],
     output: "Zu Branch „experiment“ gewechselt",
@@ -97,6 +100,7 @@ const progressBar = document.querySelector("#progressBar");
 const progressText = document.querySelector("#progressText");
 const stepList = document.querySelector("#stepList");
 const difficulty = document.querySelector(".difficulty");
+const missionCard = document.querySelector(".mission-card");
 const resetButton = document.querySelector("#resetButton");
 const bailOutButton = document.querySelector("#bailOutButton");
 const commandHelpModal = document.querySelector("#commandHelpModal");
@@ -181,12 +185,14 @@ function escapeHtml(value) {
 
 function finishLesson() {
   missionNumber.textContent = "QUEST ABGESCHLOSSEN";
-  missionTitle.textContent = "Mayas Historie hat begonnen.";
-  missionText.textContent = "Du hast Maya durch die Grundlagen von Git geführt: prüfen, vormerken, committen und sicher auf einem Branch arbeiten. Ihr Projekt erzählt jetzt eine Geschichte.";
-  hintText.innerHTML = "Starte jederzeit neu, um die Befehle noch einmal zu üben.";
+  missionTitle.textContent = "Du hast es geschafft!";
+  missionText.innerHTML = "<strong>Hervorragend!</strong> Du hast Maya sicher durch die wichtigsten Git-Grundlagen geführt: prüfen, vormerken, committen, die Historie lesen und auf einem eigenen Branch arbeiten. Aus einem normalen Ordner ist eine nachvollziehbare Projektgeschichte geworden.";
+  hintText.innerHTML = "Dein erster Git-Workflow sitzt. <strong>Darauf kannst du stolz sein.</strong>";
   progressText.textContent = "08 / 08";
   progressBar.style.width = "100%";
   difficulty.innerHTML = '<i class="filled"></i><i class="filled"></i><i class="filled"></i><i class="filled"></i>';
+  missionCard.classList.add("lesson-complete");
+  addTerminalLine("echo $?", "0\n\n✓ Alle Aufgaben erfolgreich abgeschlossen.\n  Maya und ihre Projektgeschichte sind in guten Händen.");
   commandInput.disabled = true;
   commandInput.placeholder = "Lektion abgeschlossen";
   commandForm.querySelector("button").disabled = true;
@@ -207,7 +213,10 @@ commandForm.addEventListener("submit", (event) => {
   }
 
   const acceptedCommands = [lesson.command, ...(lesson.alternatives || [])].map(normalized);
-  if (!acceptedCommands.includes(typedCommand)) {
+  const isAccepted = lesson.accepts
+    ? lesson.accepts(typedCommand)
+    : acceptedCommands.includes(typedCommand);
+  if (!isAccepted) {
     feedback.textContent = "Noch nicht ganz. Lies den Hinweis und versuche es erneut.";
     feedback.className = "feedback error";
     commandInput.select();
@@ -240,6 +249,7 @@ resetButton.addEventListener("click", () => {
   `;
   updateHistoryControls();
   feedback.textContent = "";
+  missionCard.classList.remove("lesson-complete");
   commandInput.disabled = false;
   commandForm.querySelector("button").disabled = false;
   bailOutButton.disabled = false;
